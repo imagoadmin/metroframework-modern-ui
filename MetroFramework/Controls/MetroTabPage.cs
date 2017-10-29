@@ -178,10 +178,14 @@ namespace MetroFramework.Controls
         private bool showHorizontalScrollbar = false;
         [DefaultValue(false)]
         [Category(MetroDefaults.PropertyCategory.Appearance)]
-        public bool HorizontalScrollbar 
+        public bool HorizontalScrollbar
         {
             get { return showHorizontalScrollbar; }
-            set { showHorizontalScrollbar = value; }
+            set
+            {
+                showHorizontalScrollbar = value;
+                horizontalScrollbar.Visible = showHorizontalScrollbar;
+            }
         }
 
         [Category(MetroDefaults.PropertyCategory.Appearance)]
@@ -211,7 +215,11 @@ namespace MetroFramework.Controls
         public bool VerticalScrollbar
         {
             get { return showVerticalScrollbar; }
-            set { showVerticalScrollbar = value; }
+            set
+            {
+                showVerticalScrollbar = value;
+                verticalScrollbar.Visible = showVerticalScrollbar;
+            }
         }
 
         [Category(MetroDefaults.PropertyCategory.Appearance)]
@@ -246,8 +254,8 @@ namespace MetroFramework.Controls
             {
                 if (value)
                 {
-                    showHorizontalScrollbar = true;
-                    showVerticalScrollbar = true;
+                    HorizontalScrollbar = true;
+                    VerticalScrollbar = true;
                 }
 
                 base.AutoScroll = value;
@@ -268,6 +276,9 @@ namespace MetroFramework.Controls
 
             Controls.Add(verticalScrollbar);
             Controls.Add(horizontalScrollbar);
+
+            horizontalScrollbar.Visible = showHorizontalScrollbar;
+            verticalScrollbar.Visible = showVerticalScrollbar;
 
             verticalScrollbar.UseBarColor = true;
             horizontalScrollbar.UseBarColor = true;
@@ -356,7 +367,7 @@ namespace MetroFramework.Controls
 
             if (HorizontalScrollbar)
             {
-                horizontalScrollbar.Visible = HorizontalScroll.Visible;                
+                horizontalScrollbar.Visible = HorizontalScroll.Visible;
             }
             if (HorizontalScroll.Visible)
             {
@@ -368,7 +379,7 @@ namespace MetroFramework.Controls
 
             if (VerticalScrollbar)
             {
-                verticalScrollbar.Visible = VerticalScroll.Visible;                
+                verticalScrollbar.Visible = VerticalScroll.Visible;
             }
             if (VerticalScroll.Visible)
             {
