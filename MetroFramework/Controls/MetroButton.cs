@@ -130,7 +130,7 @@ namespace MetroFramework.Controls
             set { metroStyleManager = value; }
         }
 
-        private bool useCustomBackColor= false;
+        private bool useCustomBackColor = false;
         [DefaultValue(false)]
         [Category(MetroDefaults.PropertyCategory.Appearance)]
         public bool UseCustomBackColor
@@ -185,7 +185,32 @@ namespace MetroFramework.Controls
         public bool Highlight
         {
             get { return highlight; }
-            set { highlight = value; }
+            set
+            {
+                if (highlight != value)
+                {
+                    highlight = value;
+                    this.Invalidate();
+                }
+            }
+        }
+
+        private bool showHighlightWithHover = false;
+        [DefaultValue(false)]
+        [Category(MetroDefaults.PropertyCategory.Appearance)]
+        public bool ShowHighlightWithHover
+        {
+            get { return showHighlightWithHover; }
+            set { showHighlightWithHover = value; }
+        }
+
+        private bool useHoverBackgroundWhenFocused = true;
+        [DefaultValue(true)]
+        [Category(MetroDefaults.PropertyCategory.Appearance)]
+        public bool UseHoverBackgroundWhenFocused
+        {
+            get { return useHoverBackgroundWhenFocused; }
+            set { useHoverBackgroundWhenFocused = value; }
         }
 
         private MetroButtonSize metroButtonSize = MetroButtonSize.Small;
@@ -228,11 +253,11 @@ namespace MetroFramework.Controls
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            try 
+            try
             {
                 Color backColor = BackColor;
 
-                if (isHovered && !isPressed && Enabled)
+                if ((isHovered || (isFocused && UseHoverBackgroundWhenFocused)) && !isPressed && Enabled)
                 {
                     backColor = MetroPaint.BackColor.Button.Hover(Theme);
                 }
@@ -249,28 +274,28 @@ namespace MetroFramework.Controls
                     if (!useCustomBackColor)
                     {
                         backColor = MetroPaint.BackColor.Button.Normal(Theme);
-                    } 
+                    }
                 }
 
                 if (backColor.A == 255 && BackgroundImage == null)
-                { 
-                    e.Graphics.Clear(backColor); 
-                    return; 
-                } 
-                
+                {
+                    e.Graphics.Clear(backColor);
+                    return;
+                }
+
                 base.OnPaintBackground(e);
 
                 OnCustomPaintBackground(new MetroPaintEventArgs(backColor, Color.Empty, e.Graphics));
             }
             catch
-            { 
-                Invalidate(); 
+            {
+                Invalidate();
             }
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            try			
+            try
             {
                 if (GetStyle(ControlStyles.AllPaintingInWmPaint))
                 {
@@ -278,10 +303,10 @@ namespace MetroFramework.Controls
                 }
 
                 OnCustomPaint(new MetroPaintEventArgs(Color.Empty, Color.Empty, e.Graphics));
-                OnPaintForeground(e); 
+                OnPaintForeground(e);
             }
-            catch 
-            { 
+            catch
+            {
                 Invalidate();
             }
         }
@@ -321,14 +346,14 @@ namespace MetroFramework.Controls
                     foreColor = MetroPaint.ForeColor.Button.Normal(Theme);
                 }
             }
-            
+
             using (Pen p = new Pen(borderColor))
             {
                 Rectangle borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(p, borderRect);
             }
 
-            if (Highlight && !isHovered && !isPressed && Enabled)
+            if (Highlight && (ShowHighlightWithHover || !isHovered) && !isPressed && Enabled)
             {
                 using (Pen p = MetroPaint.GetStylePen(Style))
                 {
@@ -450,10 +475,7 @@ namespace MetroFramework.Controls
         {
             //This will check if control got the focus
             //If not thats the only it will remove the focus color
-            if (!isFocused)
-            {
-                isHovered = false;
-            }
+            isHovered = false;
 
             Invalidate();
 
