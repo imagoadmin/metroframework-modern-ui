@@ -179,6 +179,15 @@ namespace MetroFramework.Controls
             set { displayFocusRectangle = value; }
         }
 
+        private bool textWordWrap = false;
+        [DefaultValue(false)]
+        [Category(MetroDefaults.PropertyCategory.Appearance)]
+        public bool TextWordWrap
+        {
+            get { return textWordWrap; }
+            set { textWordWrap = value; }
+        }
+
         private bool highlight = false;
         [DefaultValue(false)]
         [Category(MetroDefaults.PropertyCategory.Appearance)]
@@ -364,7 +373,7 @@ namespace MetroFramework.Controls
                 }
             }
 
-            TextRenderer.DrawText(e.Graphics, Text, MetroFonts.Button(metroButtonSize, metroButtonWeight), ClientRectangle, foreColor, MetroPaint.GetTextFormatFlags(TextAlign));
+            TextRenderer.DrawText(e.Graphics, Text, MetroFonts.Button(metroButtonSize, metroButtonWeight), ClientRectangle, foreColor, MetroPaint.GetTextFormatFlags(TextAlign, this.TextWordWrap));
 
             OnCustomPaintForeground(new MetroPaintEventArgs(Color.Empty, foreColor, e.Graphics));
 
